@@ -13,11 +13,13 @@ import {
   ModalFooter,
   useDisclosure,
   Textarea,
+  Input,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-type Inputs = {
-  newtodo: string;
+type NewTodoType = {
+  title: string;
+  description?: string;
 };
 
 const Dashboard: NextPage = () => {
@@ -26,13 +28,13 @@ const Dashboard: NextPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<NewTodoType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [todos, settodos] = useState<string[]>([]);
+  const [todos, settodos] = useState<NewTodoType[]>([]);
 
-  const onSubmit = (value: Inputs) => {
-    settodos([...todos, value.newtodo]);
+  const onSubmit = (value: NewTodoType) => {
+    settodos([...todos, value]);
     onClose();
     reset();
   };
@@ -43,7 +45,13 @@ const Dashboard: NextPage = () => {
 
       <Container mt="35px" overflowY="auto" maxH="75%">
         {todos.map((todo) => {
-          return <TodoCard key={todo} task={todo} />;
+          return (
+            <TodoCard
+              key={todo.title}
+              title={todo.title}
+              description={todo.description}
+            />
+          );
         })}
       </Container>
 
@@ -58,11 +66,19 @@ const Dashboard: NextPage = () => {
             <ModalHeader>New Todo</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Textarea
-                placeholder="Here is a sample placeholder"
-                {...register("newtodo", { required: true })}
+              <Input
+                type="text"
+                placeholder="Todo Title"
+                mb={5}
+                isRequired
+                {...register("title", { required: true })}
               />
-              {errors.newtodo && <span>This field is required</span>}
+              {errors.title && <span>This field is required</span>}
+              <Textarea
+                placeholder="Description"
+                {...register("description")}
+              />
+              {errors.description && <span>This field is required</span>}
             </ModalBody>
 
             <ModalFooter>

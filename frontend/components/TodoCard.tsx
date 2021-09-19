@@ -1,22 +1,28 @@
 import React from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 
 interface TodoCardProps {
-  task: string;
+  title: string;
+  description?: string;
 }
 
-const TodoCard: React.FC<TodoCardProps> = ({ task }) => {
+const TodoCard: React.FC<TodoCardProps> = ({ title, description }) => {
   return (
     <Box
       border="1px"
-      borderColor="red"
+      borderColor="teal"
       paddingX={4}
       paddingY={5}
       rounded="md"
       marginY="10px"
     >
-      <Text>{task}</Text>
-      <Button colorScheme="teal">Done</Button>
+      <Heading size="md">{title}</Heading>
+
+      <Text>{description}</Text>
+
+      <Button colorScheme="teal" mt={4}>
+        Done
+      </Button>
     </Box>
   );
 };
