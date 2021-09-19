@@ -6,4 +6,9 @@ const SaveTodo = async (title: string, description: string) => {
   console.log("Saved to database");
 };
 
-export { SaveTodo };
+const FetchTodos = async () => {
+  const arr = await todoModel.find({});
+  return arr;
+};
+
+export { SaveTodo, FetchTodos };

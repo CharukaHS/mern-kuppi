@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { Container, Flex, Heading } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
@@ -34,28 +34,54 @@ const Dashboard: NextPage = () => {
   const [todos, settodos] = useState<NewTodoType[]>([]);
 
   const onSubmit = async (value: NewTodoType) => {
-    // server side update
-    const res = await fetch("http://localhost:3001/todo/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(value),
-    });
+    try {
+      // server side update
+      const res = await fetch("http://localhost:3001/todo/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(value),
+      });
 
-    if (!res.ok) {
-      console.error("Error occured while saving to database");
-      return;
+      if (!res.ok) {
+        console.error("Error occured while saving to database");
+        return;
+      }
+
+      // client side update
+      settodos([...todos, value]);
+
+      alert("Saved to database");
+
+      onClose();
+      reset();
+    } catch (error) {
+      alert("Error occured");
+      console.log(error);
     }
-
-    // client side update
-    settodos([...todos, value]);
-
-    alert("Saved to database");
-
-    onClose();
-    reset();
   };
+
+  const FetchTodos = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/todo/");
+
+      if (!res.ok) {
+        console.error("Error occured while retreived from database");
+        return;
+      }
+
+      const data = (await res.json()) as NewTodoType[];
+      settodos(data);
+    } catch (error) {
+      alert("Error occured");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    FetchTodos();
+  }, []);
 
   return (
     <Flex direction="column" justify="center" align="center" height="100vh">
