@@ -1,7 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 
+import todoRoutes from "./routes/todo.routes";
+
 const app = express();
+app.use(express.json());
+
+app.use("/todo", todoRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from /");
