@@ -8,7 +8,7 @@ router.post("/new", async (req, res) => {
   const { title, description } = req.body;
   try {
     await SaveTodo(title, description);
-    res.send("hello from todo/new");
+    res.sendStatus(200);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);

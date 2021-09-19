@@ -33,8 +33,26 @@ const Dashboard: NextPage = () => {
 
   const [todos, settodos] = useState<NewTodoType[]>([]);
 
-  const onSubmit = (value: NewTodoType) => {
+  const onSubmit = async (value: NewTodoType) => {
+    // server side update
+    const res = await fetch("http://localhost:3001/todo/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(value),
+    });
+
+    if (!res.ok) {
+      console.error("Error occured while saving to database");
+      return;
+    }
+
+    // client side update
     settodos([...todos, value]);
+
+    alert("Saved to database");
+
     onClose();
     reset();
   };
